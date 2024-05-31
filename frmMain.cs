@@ -91,6 +91,12 @@ namespace PES5_WE9_LE_CameraTool
             byte[] clippingValueBytes = new byte[4];
             Clipping clipping = config.clippingList[0];
 
+            if (!Convert.ToBoolean(config.cameraZoomOffset) || !Convert.ToBoolean(config.stadRoofOffset1) || !Convert.ToBoolean(clipping.offset))
+            {
+                MessageBox.Show($"Offsets cannot be zero, error when reading configuration", $"{Text} Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             try
             {
                 using (FileStream fs = new FileStream(executablePath, FileMode.Open, FileAccess.Read))
@@ -162,6 +168,7 @@ namespace PES5_WE9_LE_CameraTool
         }
         private void WriteFloatBytesValues(FileStream fs, BinaryWriter writer, uint offset, byte[] newValueBytes)
         {
+            if (!Convert.ToBoolean(offset)) return;
             fs.Seek(offset, SeekOrigin.Begin);
 
             writer.Write(newValueBytes[2]);
@@ -201,6 +208,7 @@ namespace PES5_WE9_LE_CameraTool
 
                     foreach (Clipping clipping in config.clippingList)
                     {
+                        if (!Convert.ToBoolean(clipping.offset)) continue;
                         fs.Seek(clipping.offset, SeekOrigin.Begin);
                         writer.Write(chkFixStadClipping.Checked ? clipping.newValue : clipping.orgValue);
                     }
