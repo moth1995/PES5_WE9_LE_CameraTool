@@ -228,7 +228,7 @@ namespace PES5_WE9_LE_CameraTool
         {
             string about = $@"{Text} is a tool developed by PES 5 Indie Team.
 
-The main proporse is to allow PS2 and PSP users to change the zoom of the camera in the same way we do on pc versions.
+The main proporse is to allow PS2 users to change the zoom of the camera in the same way we do on PC versions.
 Enjoy it!
 
 Copyright \u00a9 2024";
