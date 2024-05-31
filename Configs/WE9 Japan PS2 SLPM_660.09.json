@@ -9,22 +9,22 @@
         {
             "offset": 1108904,
             "orgValue": [16, 0, 0, 69],
-            "newValue": [251, 56, 8, 8]
+            "newValue": [16, 0, 0, 16]
         },
         {
             "offset": 1109216,
             "orgValue": [16, 0, 0, 69],
-            "newValue": [73, 57, 8, 8]
+            "newValue": [16, 0, 0, 16]
         },
         {
             "offset": 1109040,
             "orgValue": [2, 0, 0, 69],
-            "newValue": [15, 57, 8, 8]
+            "newValue": [2, 0, 0, 16]
         },
         {
             "offset": 1110784,
             "orgValue": [2, 0, 1, 69],
-            "newValue": [195, 58, 8, 8]
+            "newValue": [2, 0, 0, 16]
         },
         {
             "offset": 1110832,
@@ -34,12 +34,12 @@
         {
             "offset": 1109000,
             "orgValue": [2, 0, 1, 69],
-            "newValue": [5, 57, 8, 8]
+            "newValue": [2, 0, 0, 16]
         },
         {
             "offset": 1110144,
             "orgValue": [2, 0, 1, 69],
-            "newValue": [35, 58, 8, 8]
+            "newValue": [2, 0, 0, 16]
         }
     ]
 }
