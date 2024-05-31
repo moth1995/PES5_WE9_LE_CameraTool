@@ -1,0 +1,45 @@
+{
+	"executableSize" : 3217512,
+    "cameraZoomOffset": 1048404,
+    "cameraZoomOutOffset1": 1076504,
+    "cameraZoomOutOffset2": 1542712,
+    "stadRoofOffset1": 1121896,
+    "stadRoofOffset2": 1124968,
+    "clippingList": [
+        {
+            "offset": 1119776,
+            "orgValue": [16, 0, 0, 69],
+            "newValue": [16, 0, 0, 16]
+        },
+        {
+            "offset": 1120156,
+            "orgValue": [16, 0, 0, 69],
+            "newValue": [16, 0, 0, 16]
+        },
+        {
+            "offset": 1119912,
+            "orgValue": [2, 0, 0, 69],
+            "newValue": [2, 0, 0, 16]
+        },
+        {
+            "offset": 1121760,
+            "orgValue": [2, 0, 1, 69],
+            "newValue": [2, 0, 0, 16]
+        },
+        {
+            "offset": 1121808,
+            "orgValue": [12, 0, 49, 54],
+            "newValue": [0, 0, 0, 0]
+        },
+        {
+            "offset": 1119872,
+            "orgValue": [2, 0, 1, 69],
+            "newValue": [2, 0, 0, 16]
+        },
+        {
+            "offset": 1121108,
+            "orgValue": [2, 0, 1, 69],
+            "newValue": [2, 0, 0, 16]
+        }
+    ]
+}
