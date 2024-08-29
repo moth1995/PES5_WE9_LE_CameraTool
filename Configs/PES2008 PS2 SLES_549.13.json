@@ -5,6 +5,11 @@
     "cameraZoomOutOffset2": 1542712,
     "stadRoofOffset1": 1121896,
     "stadRoofOffset2": 1124968,
+	"cameraZoomShift": 2,
+	"cameraZoomOutShift1": 2,
+	"cameraZoomOutShift2": 2,
+	"stadRoofShift1": 2,
+	"stadRoofShift2": 2,
     "clippingList": [
         {
             "offset": 1119776,

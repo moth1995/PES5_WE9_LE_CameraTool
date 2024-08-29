@@ -1,10 +1,10 @@
 {
-	"executableSize" : 2811728,
-    "cameraZoomOffset": 1027824,
-    "cameraZoomOutOffset1": 1056380,
-    "cameraZoomOutOffset2": 1508136,
-    "stadRoofOffset1": 1110920,
-    "stadRoofOffset2": 1113840,
+	"executableSize" : 2776912,
+    "cameraZoomOffset": 1034752,
+    "cameraZoomOutOffset1": 1063704,
+    "cameraZoomOutOffset2": 1519848,
+    "stadRoofOffset1": 1118344,
+    "stadRoofOffset2": 1121264,
 	"cameraZoomShift": 2,
 	"cameraZoomOutShift1": 2,
 	"cameraZoomOutShift2": 2,
@@ -12,37 +12,37 @@
 	"stadRoofShift2": 2,
     "clippingList": [
         {
-            "offset": 1108904,
+            "offset": 1116328,
             "orgValue": [16, 0, 0, 69],
             "newValue": [16, 0, 0, 16]
         },
         {
-            "offset": 1109216,
+            "offset": 1116640,
             "orgValue": [16, 0, 0, 69],
             "newValue": [16, 0, 0, 16]
         },
         {
-            "offset": 1109040,
+            "offset": 1116464,
             "orgValue": [2, 0, 0, 69],
             "newValue": [2, 0, 0, 16]
         },
         {
-            "offset": 1110784,
+            "offset": 1118208,
             "orgValue": [2, 0, 1, 69],
             "newValue": [2, 0, 0, 16]
         },
         {
-            "offset": 1110832,
+            "offset": 1118256,
             "orgValue": [12, 0, 49, 54],
             "newValue": [0, 0, 0, 0]
         },
         {
-            "offset": 1109000,
+            "offset": 1116424,
             "orgValue": [2, 0, 1, 69],
             "newValue": [2, 0, 0, 16]
         },
         {
-            "offset": 1110144,
+            "offset": 1117568,
             "orgValue": [2, 0, 1, 69],
             "newValue": [2, 0, 0, 16]
         }
