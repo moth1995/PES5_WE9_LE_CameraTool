@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BinaryPatcher.cs" />
     <Compile Include="Clipping.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="frmMain.cs">
@@ -89,7 +90,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="app.manifest" />
-	  <None Include="Properties\Settings.settings">
+    <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
@@ -109,21 +110,15 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-	<ItemGroup>
-		<!-- Incluir todos los archivos de la carpeta Configs -->
-		<ConfigFiles Include="Configs\**\*" />
-	</ItemGroup>
-
-	<Target Name="CopyConfigsFolder" AfterTargets="AfterBuild">
-		<!-- Crear la carpeta Configs en el directorio de salida si no existe -->
-		<MakeDir Directories="$(OutputPath)Configs" />
-
-		<!-- Copiar todos los archivos y carpetas de Configs al directorio de salida -->
-		<Copy
-		  SourceFiles="@(ConfigFiles)"
-		  DestinationFiles="@(ConfigFiles->'$(OutputPath)Configs\%(RecursiveDir)%(Filename)%(Extension)')"
-		  SkipUnchangedFiles="true" />
-	</Target>
-
-	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <!-- Incluir todos los archivos de la carpeta Configs -->
+    <ConfigFiles Include="Configs\**\*" />
+  </ItemGroup>
+  <Target Name="CopyConfigsFolder" AfterTargets="AfterBuild">
+    <!-- Crear la carpeta Configs en el directorio de salida si no existe -->
+    <MakeDir Directories="$(OutputPath)Configs" />
+    <!-- Copiar todos los archivos y carpetas de Configs al directorio de salida -->
+    <Copy SourceFiles="@(ConfigFiles)" DestinationFiles="@(ConfigFiles->'$(OutputPath)Configs\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+  </Target>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
