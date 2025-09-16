@@ -5,6 +5,8 @@ VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PES5_WE9_LE_CameraTool", "PES5_WE9_LE_CameraTool\PES5_WE9_LE_CameraTool.csproj", "{460D343E-8F83-448E-B72E-9562342EAACA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PES5_WE9_LE_CameraTool.Tests", "PES5_WE9_LE_CameraTool.Tests\PES5_WE9_LE_CameraTool.Tests.csproj", "{610FB2E5-F229-4C18-824D-7BCDF4C4D9C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{460D343E-8F83-448E-B72E-9562342EAACA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{460D343E-8F83-448E-B72E-9562342EAACA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{460D343E-8F83-448E-B72E-9562342EAACA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{610FB2E5-F229-4C18-824D-7BCDF4C4D9C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{610FB2E5-F229-4C18-824D-7BCDF4C4D9C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{610FB2E5-F229-4C18-824D-7BCDF4C4D9C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{610FB2E5-F229-4C18-824D-7BCDF4C4D9C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
