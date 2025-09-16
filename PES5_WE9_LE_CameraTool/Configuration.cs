@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 namespace PES5_WE9_LE_CameraTool
 {
     [DataContract]
-    internal class Configuration
+    public class Configuration
     {
         [DataMember]
         public uint executableSize;

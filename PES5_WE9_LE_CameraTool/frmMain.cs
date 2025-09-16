@@ -100,15 +100,15 @@ namespace PES5_WE9_LE_CameraTool
             try
             {
                 using (FileStream fs = new FileStream(executablePath, FileMode.Open, FileAccess.Read))
-                using (BinaryReader reader = new BinaryReader(fs))
+                using (BinaryReader br = new BinaryReader(fs))
                 {
                     
-                    zoomValue = ReadFloatBytesValues(fs, reader, config.cameraZoomOffset, config.cameraZoomShift);
+                    zoomValue = BinaryPatcher.ReadFloatWithShift(fs, br, config.cameraZoomOffset, config.cameraZoomShift);
 
-                    stadRoofValue = ReadFloatBytesValues(fs, reader, config.stadRoofOffset1, config.stadRoofShift1);
+                    stadRoofValue = BinaryPatcher.ReadFloatWithShift(fs, br, config.stadRoofOffset1, config.stadRoofShift1);
 
                     fs.Seek(clipping.offset, SeekOrigin.Begin);
-                    clippingValueBytes = reader.ReadBytes(clippingValueBytes.Length);
+                    clippingValueBytes = br.ReadBytes(clippingValueBytes.Length);
 
                 }
             }
@@ -151,34 +151,6 @@ namespace PES5_WE9_LE_CameraTool
             LoadExecutableValues();
             lblCurrentExecutable.Text = $"Current executable: {Path.GetFileName(executablePath)}";
         }
-        private float ReadFloatBytesValues(FileStream fs, BinaryReader reader, uint offset, int shift)
-        {
-            byte[] valueBytes = new byte[sizeof(float)];
-
-            fs.Seek(offset, SeekOrigin.Begin);
-
-            valueBytes[2] = reader.ReadByte();
-            valueBytes[3] = reader.ReadByte();
-            fs.Seek(shift, SeekOrigin.Current);
-            valueBytes[0] = reader.ReadByte();
-            valueBytes[1] = reader.ReadByte();
-
-            return BitConverter.ToSingle(valueBytes, 0);
-
-        }
-        private void WriteFloatBytesValues(FileStream fs, BinaryWriter writer, uint offset, byte[] newValueBytes, int shift)
-        {
-            if (!Convert.ToBoolean(offset)) return;
-            fs.Seek(offset, SeekOrigin.Begin);
-
-            writer.Write(newValueBytes[2]);
-            writer.Write(newValueBytes[3]);
-
-            fs.Seek(shift, SeekOrigin.Current);
-
-            writer.Write(newValueBytes[0]);
-            writer.Write(newValueBytes[1]);
-        }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -195,22 +167,22 @@ namespace PES5_WE9_LE_CameraTool
             try
             {
                 using (FileStream fs = new FileStream(executablePath, FileMode.OpenOrCreate, FileAccess.Write))
-                using (BinaryWriter writer = new BinaryWriter(fs))
+                using (BinaryWriter bw = new BinaryWriter(fs))
                 {
-                    WriteFloatBytesValues(fs, writer, config.cameraZoomOffset, newZoomValueBytes, config.cameraZoomShift);
-                    WriteFloatBytesValues(fs, writer, config.cameraZoomOutOffset1, newZoomValueBytes, config.cameraZoomOutShift1);
-                    WriteFloatBytesValues(fs, writer, config.cameraZoomOutOffset2, newZoomValueBytes, config.cameraZoomOutShift2);
+                    BinaryPatcher.WriteFloatWithShift(fs, bw, config.cameraZoomOffset, newZoomValueBytes, config.cameraZoomShift);
+                    BinaryPatcher.WriteFloatWithShift(fs, bw, config.cameraZoomOutOffset1, newZoomValueBytes, config.cameraZoomOutShift1);
+                    BinaryPatcher.WriteFloatWithShift(fs, bw, config.cameraZoomOutOffset2, newZoomValueBytes, config.cameraZoomOutShift2);
 
                     byte[] stadRoofNewValue = chkAddStadRoof.Checked ? stadRoofValueOn : stadRoofValueOff;
 
-                    WriteFloatBytesValues(fs, writer, config.stadRoofOffset1, stadRoofNewValue, config.stadRoofShift1);
-                    WriteFloatBytesValues(fs, writer, config.stadRoofOffset2, stadRoofNewValue, config.stadRoofShift2);
+                    BinaryPatcher.WriteFloatWithShift(fs, bw, config.stadRoofOffset1, stadRoofNewValue, config.stadRoofShift1);
+                    BinaryPatcher.WriteFloatWithShift(fs, bw, config.stadRoofOffset2, stadRoofNewValue, config.stadRoofShift2);
 
                     foreach (Clipping clipping in config.clippingList)
                     {
                         if (!Convert.ToBoolean(clipping.offset)) continue;
                         fs.Seek(clipping.offset, SeekOrigin.Begin);
-                        writer.Write(chkFixStadClipping.Checked ? clipping.newValue : clipping.orgValue);
+                        bw.Write(chkFixStadClipping.Checked ? clipping.newValue : clipping.orgValue);
                     }
                 }
 
