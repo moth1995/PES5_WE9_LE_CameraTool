@@ -8,7 +8,6 @@ on:
     branches: [ main, master ]
 
 env:
-  # Adjust these paths if your repo root has a subfolder around the solution.
   SLN_PATH: PES5_WE9_LE_CameraTool.sln
   TEST_DLL: PES5_WE9_LE_CameraTool.Tests\bin\Release\PES5_WE9_LE_CameraTool.Tests.dll
   APP_RELEASE_DIR: PES5_WE9_LE_CameraTool\bin\Release
@@ -56,7 +55,7 @@ jobs:
           $dll = "${{ env.TEST_DLL }}"
           if (!(Test-Path $dll)) { throw "Test assembly not found at $dll" }
 
-          & $runner.FullName $dll --noheader --framework:net-3.5 --result:"TestResult.xml;format=nunit2"
+          & $runner.FullName $dll --noheader --framework:net-3.5 --result:"TestResult.xml;format=nunit3"
           if ($LASTEXITCODE -ne 0) { throw "Tests failed with exit code $LASTEXITCODE" }
 
       - name: Upload test results
