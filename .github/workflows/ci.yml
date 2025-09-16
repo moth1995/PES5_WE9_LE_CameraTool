@@ -1,0 +1,107 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main, master ]
+
+env:
+  # Adjust these paths if your repo root has a subfolder around the solution.
+  SLN_PATH: PES5_WE9_LE_CameraTool.sln
+  TEST_DLL: PES5_WE9_LE_CameraTool.Tests\bin\Release\PES5_WE9_LE_CameraTool.Tests.dll
+  APP_RELEASE_DIR: PES5_WE9_LE_CameraTool\bin\Release
+
+jobs:
+  build-test:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Enable .NET Framework 3.5 (Windows Feature)
+        run: dism /online /enable-feature /featurename:NetFx3 /All
+        shell: powershell
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            packages
+          key: nuget-${{ hashFiles('**/packages.config') }}
+
+      - name: NuGet restore (solution)
+        run: nuget restore "${{ env.SLN_PATH }}"
+
+      - name: Build Release
+        run: msbuild "${{ env.SLN_PATH }}" /p:Configuration=Release /m
+
+      - name: Install NUnit Console Runner (CLI)
+        run: nuget install NUnit.ConsoleRunner -Version 3.17.0 -OutputDirectory .\testrunner
+
+      - name: Run NUnit tests
+        shell: powershell
+        run: |
+          $runner = Get-ChildItem -Recurse -Path . -Filter "nunit3-console.exe" | Select-Object -First 1
+          if (-not $runner) { throw "nunit3-console.exe not found. NuGet install failed?" }
+
+          $dll = "${{ env.TEST_DLL }}"
+          if (!(Test-Path $dll)) { throw "Test assembly not found at $dll" }
+
+          & $runner.FullName $dll --noheader --framework:net-3.5 --result:"TestResult.xml;format=nunit2"
+          if ($LASTEXITCODE -ne 0) { throw "Tests failed with exit code $LASTEXITCODE" }
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nunit-results
+          path: TestResult.xml
+
+      - name: Package Release binaries
+        if: always()
+        shell: powershell
+        run: |
+          $dir = "${{ env.APP_RELEASE_DIR }}"
+          if (!(Test-Path $dir)) { throw "Release output not found: $dir" }
+
+          $zip = "CameraTool_Release.zip"
+          if (Test-Path $zip) { Remove-Item $zip -Force }
+          Compress-Archive -Path "$dir\*" -DestinationPath $zip -Force
+          Write-Host "Created $zip"
+
+      - name: Upload Release artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: CameraTool_Release
+          path: CameraTool_Release.zip
+
+  release:
+    runs-on: windows-latest
+    needs: build-test
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download packaged binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: CameraTool_Release
+          path: .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: CameraTool_Release.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
