@@ -1,125 +1,21 @@
 name: CI
-
 on:
-  push:
-    branches: [ main, master ]
-    tags: [ 'v*' ]
   pull_request:
     branches: [ main, master ]
-
-env:
-  SLN_PATH: PES5_WE9_LE_CameraTool.sln
-  TEST_DLL: PES5_WE9_LE_CameraTool.Tests\bin\Release\PES5_WE9_LE_CameraTool.Tests.dll
-  APP_RELEASE_DIR: PES5_WE9_LE_CameraTool\bin\Release
-  PRODUCT_PREFIX: PES5_WE9_LE_CameraTool
+permissions:
+  contents: write
 
 jobs:
-  build-test:
-    runs-on: windows-latest
-    outputs:
-      version: ${{ steps.ver.outputs.version }}
-      zipname: ${{ steps.pkg.outputs.zipname }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
-
-      - name: Enable .NET Framework 3.5 (Windows Feature)
-        run: dism /online /enable-feature /featurename:NetFx3 /All
-        shell: powershell
-
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v2
-
-      - name: Cache NuGet packages
-        uses: actions/cache@v4
-        with:
-          path: |
-            packages
-          key: nuget-${{ hashFiles('**/packages.config') }}
-
-      - name: NuGet restore (solution)
-        run: nuget restore "${{ env.SLN_PATH }}"
-
-      - name: Build Release
-        run: msbuild "${{ env.SLN_PATH }}" /p:Configuration=Release /m
-
-      - name: Install NUnit Console Runner (CLI)
-        run: nuget install NUnit.ConsoleRunner -Version 3.17.0 -OutputDirectory .\testrunner
-
-      - name: Run NUnit tests
-        shell: powershell
-        run: |
-          $runner = Get-ChildItem -Recurse -Path . -Filter "nunit3-console.exe" | Select-Object -First 1
-          if (-not $runner) { throw "nunit3-console.exe not found. NuGet install failed?" }
-
-          $dll = "${{ env.TEST_DLL }}"
-          if (!(Test-Path $dll)) { throw "Test assembly not found at $dll" }
-
-          & $runner.FullName $dll --noheader --framework:net-3.5 --result:"TestResult.xml;format=nunit3"
-          if ($LASTEXITCODE -ne 0) { throw "Tests failed with exit code $LASTEXITCODE" }
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: nunit-results
-          path: TestResult.xml
-
-      - name: Determine version
-        id: ver
-        shell: bash
-        run: |
-          ref="${GITHUB_REF_NAME}"
-          if [[ "$ref" =~ ^v[0-9] ]]; then
-            ver="${ref#v}"
-          else
-            ver="0.0.0-${GITHUB_RUN_NUMBER}"
-          fi
-          echo "version=$ver" >> $GITHUB_OUTPUT
-          echo "Resolved version: $ver"
-
-      - name: Package versioned ZIP
-        id: pkg
-        shell: powershell
-        run: |
-          $dir = "${{ env.APP_RELEASE_DIR }}"
-          if (!(Test-Path $dir)) { throw "Release output not found: $dir" }
-
-          $ver = "${{ steps.ver.outputs.version }}"
-          $zipname = "${{ env.PRODUCT_PREFIX }}_v$ver.zip"
-
-          if (Test-Path $zipname) { Remove-Item $zipname -Force }
-          Compress-Archive -Path "$dir\*" -DestinationPath $zipname -Force
-          Write-Host "Created $zipname"
-          echo "zipname=$zipname" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
-
-      - name: Upload versioned ZIP artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: CameraTool_Zip
-          path: ${{ steps.pkg.outputs.zipname }}
-
-  release:
-    runs-on: windows-latest
-    needs: build-test
-    if: startsWith(github.ref, 'refs/tags/v')
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Download packaged ZIP
-        uses: actions/download-artifact@v4
-        with:
-          name: CameraTool_Zip
-          path: .
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: ${{ needs.build-test.outputs.zipname }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  dotnet35:
+    uses: moth1995/ci-templates/.github/workflows/dotnet35-ci.yml@main
+    with:
+      sln_path: PES5_WE9_LE_CameraTool.sln
+      app_project_dir: PES5_WE9_LE_CameraTool
+      test_project_dir: PES5_WE9_LE_CameraTool.Tests
+      test_assembly_name: PES5_WE9_LE_CameraTool.Tests.dll
+      product_prefix: PES5_WE9_LE_CameraTool
+      platforms_json: '["AnyCPU"]'
+      tag_prefix: v
+      run_tests: true
+      enable_release: true
+      retention_days: 7
