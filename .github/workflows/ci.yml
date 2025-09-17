@@ -2,6 +2,8 @@ name: CI
 on:
   pull_request:
     branches: [ main, master ]
+  push:
+    tags: [ 'v*' ]
 permissions:
   contents: write
 
