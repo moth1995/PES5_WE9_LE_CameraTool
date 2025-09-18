@@ -11,12 +11,12 @@ jobs:
   dotnet35:
     uses: moth1995/ci-templates/.github/workflows/dotnet35-ci.yml@main
     with:
-      sln_path: PES5_WE9_LE_CameraTool.sln
-      app_project_dir: PES5_WE9_LE_CameraTool
-      test_project_dir: PES5_WE9_LE_CameraTool.Tests
-      test_assembly_name: PES5_WE9_LE_CameraTool.Tests.dll
-      product_prefix: PES5_WE9_LE_CameraTool
-      platforms_json: '["AnyCPU", "x86"]'
+      sln_path: ${{ format('{0}.sln', github.event.repository.name) }}
+      app_project_dir: ${{ github.event.repository.name }}
+      test_project_dir: ${{ format('{0}.Tests', github.event.repository.name) }}
+      test_assembly_name: ${{ format('{0}.Tests.dll', github.event.repository.name) }}
+      product_prefix: ${{ github.event.repository.name }}
+      platforms_json: '["x64", "x86"]'
       tag_prefix: v
       run_tests: true
       enable_release: true
